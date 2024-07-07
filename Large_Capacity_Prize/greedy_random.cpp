@@ -95,8 +95,8 @@ GreedyRandomAlg::GreedyRandomAlg(double capacity, double budget, std::vector<std
                   verticesRespectingCapacity = S;
            }
            
-//           if (sizeOfTree < capacity && weightOfTree < budget)
-//              addMoreVertices(vecRatioPrizeCost, verticesRespectingCapacity, sizeOfTree, prizeOfTree, weightOfTree, budget, capacity, S, verticesCoordinations, verticesPrizes, verticesSizes, verticesServicesTime, "GreeyRandom");
+           if (sizeOfTree < capacity && weightOfTree < budget)
+              addMoreVertices(vecRatioPrizeCost, verticesRespectingCapacity, sizeOfTree, prizeOfTree, weightOfTree, budget, capacity, S, verticesCoordinations, verticesPrizes, verticesSizes, verticesServicesTime, "GreeyRandom");
            if (weightOfTree <= budget && bestPrize < prizeOfTree) {
                bestPrize = prizeOfTree;
                bestSize = sizeOfTree;
