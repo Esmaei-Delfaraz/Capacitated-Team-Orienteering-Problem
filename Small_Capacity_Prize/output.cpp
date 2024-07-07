@@ -31,12 +31,6 @@ OutputResults::OutputResults(std::string graphT, int numVertices, int valNumVehi
     verticesPrizesOfGreedy = valVerticesPrizes;
     verticesSizesOfGreedy = valVerticesSizes;
     std::vector<int> verticesOfGreedy;
-    
-    //Set GreedyRandom algorithms
-    verticesCoordinationsOfGreedyRandom = valVerticesCoordinations;
-    verticesPrizesOfGreedyRandom = valVerticesPrizes;
-    verticesSizesOfGreedyRandom = valVerticesSizes;
-    std::vector<int> verticesOfGreedyRandom;
      
      
     std::vector<double> prizeOf2Approx(numVehicles, 0);
@@ -107,6 +101,7 @@ OutputResults::OutputResults(std::string graphT, int numVertices, int valNumVehi
    }
    
    //Find paths for vehicles by Greedy
+   
    for (int k = 0; k < numVehicles; k++) {
          if (verticesCoordinationsOfGreedy.size() > 1) {
           
@@ -132,31 +127,46 @@ OutputResults::OutputResults(std::string graphT, int numVertices, int valNumVehi
    }
    
    //Find paths for vehicles by GreedyRandom
-   for (int k = 0; k < numVehicles; k++){
-    
-       if (verticesCoordinationsOfGreedyRandom.size() > 1) {
-        
-           std::cout << "\n-----------Starting the GreedyRandom for vehicle "<< k + 1 <<" ----------- \n\n";
-           startOfGreedyRandom = high_resolution_clock::now();
-           //First remove the covered vertices by previous vehicle
-           removeCoveredVertices(verticesOfGreedyRandom, verticesCoordinationsOfGreedyRandom, verticesPrizesOfGreedyRandom, verticesSizesOfGreedyRandom);
-           verticesOfGreedyRandom.clear();
-           for (int v : verticesOfGreedyRandom) {
-               verticesPrizesOfGreedyRandom[v] = 0;
-               verticesSizesOfGreedyRandom[v] = capacity + 1;
-           }
-           //BinarySearch for GeedyRandom
-           binarySearch(verticesCoordinationsOfGreedyRandom, verticesPrizesOfGreedyRandom, verticesSizesOfGreedyRandom, "GreedyRandom", verticesOfGreedyRandom, costOfGreedyRandom[k], prizeOfGreedyRandom[k], sizeOfGreedyRandom[k]);
-           stopOfGreedyRandom = high_resolution_clock::now();
-           runningTimeOfGreedyRandom[k] = duration_cast<seconds>(stopOfGreedyRandom - startOfGreedyRandom).count();
-           std::cout << "\n-The total prize of items in the GreedyRandom alg collected by vehicle " << k + 1 << " is: " << prizeOfGreedyRandom[k];
-           std::cout << "\n-The total size of items in the GreedyRandom alg collected by vehicle " << k + 1 << " is: " << sizeOfGreedyRandom[k];
-           std::cout << "\n-The total cost of path in the GreedyRandom alg taken by vehicle " << k + 1 << " is: " << costOfGreedyRandom[k];
-           std::cout << "\n-The running time of the GreedyRandom alg for computing a path for vehicle "<< k + 1 << " is: " << runningTimeOfGreedyRandom[k]<<" seconds.";
-           std::cout << "\n\n-----------Ending the GreedyRandom for vehicle "<< k + 1 <<" ----------- \n\n\n";
-        }
-     }//End-Of-For-numVehicles
-
+   for (int r = 0; r < 5; r++) {
+        std::vector<double> runningTimeOfGreedyRandomTemp(numVehicles, 0);
+        std::vector<double> sizeOfGreedyRandomTemp(numVehicles, 0);
+        std::vector<double> costOfGreedyRandomTemp(numVehicles, 0);
+        std::vector<double> prizeOfGreedyRandomTemp(numVehicles, 0);
+        //Set GreedyRandom algorithms
+        verticesCoordinationsOfGreedyRandom = valVerticesCoordinations;
+        verticesPrizesOfGreedyRandom = valVerticesPrizes;
+        verticesSizesOfGreedyRandom = valVerticesSizes;
+        std::vector<int> verticesOfGreedyRandom;
+        for (int k = 0; k < numVehicles; k++) {
+            if (verticesCoordinationsOfGreedyRandom.size() > 1) {
+             
+                std::cout << "\n-----------Starting the GreedyRandom for vehicle "<< k + 1 <<" ----------- \n\n";
+                startOfGreedyRandom = high_resolution_clock::now();
+                //First remove the covered vertices by previous vehicle
+                removeCoveredVertices(verticesOfGreedyRandom, verticesCoordinationsOfGreedyRandom, verticesPrizesOfGreedyRandom, verticesSizesOfGreedyRandom);
+                verticesOfGreedyRandom.clear();
+                for (int v : verticesOfGreedyRandom) {
+                    verticesPrizesOfGreedyRandom[v] = 0;
+                    verticesSizesOfGreedyRandom[v] = capacity + 1;
+                }
+                //BinarySearch for GeedyRandom
+                binarySearch(verticesCoordinationsOfGreedyRandom, verticesPrizesOfGreedyRandom, verticesSizesOfGreedyRandom, "GreedyRandom", verticesOfGreedyRandom, costOfGreedyRandomTemp[k], prizeOfGreedyRandomTemp[k], sizeOfGreedyRandomTemp[k]);
+                stopOfGreedyRandom = high_resolution_clock::now();
+                runningTimeOfGreedyRandomTemp[k] = duration_cast<seconds>(stopOfGreedyRandom - startOfGreedyRandom).count();
+                std::cout << "\n-The total prize of items in the GreedyRandom alg collected by vehicle " << k + 1 << " is: " << prizeOfGreedyRandomTemp[k];
+                std::cout << "\n-The total size of items in the GreedyRandom alg collected by vehicle " << k + 1 << " is: " << sizeOfGreedyRandomTemp[k];
+                std::cout << "\n-The total cost of path in the GreedyRandom alg taken by vehicle " << k + 1 << " is: " << costOfGreedyRandomTemp[k];
+                std::cout << "\n-The running time of the GreedyRandom alg for computing a path for vehicle "<< k + 1 << " is: " << runningTimeOfGreedyRandomTemp[k]<<" seconds.";
+                std::cout << "\n\n-----------Ending the GreedyRandom for vehicle "<< k + 1 <<" ----------- \n\n\n";
+             }
+          }//End-Of-For-numVehicles
+          for (int k = 0; k < numVehicles; k++) {
+               runningTimeOfGreedyRandom[k] += runningTimeOfGreedyRandomTemp[k];
+               sizeOfGreedyRandom[k] += sizeOfGreedyRandomTemp[k];
+               costOfGreedyRandom[k] += costOfGreedyRandomTemp[k];
+               prizeOfGreedyRandom[k] += prizeOfGreedyRandomTemp[k];
+          }
+     }
      std::ofstream ofs;
      //Open the file in the append mode, meaning that in case the file exists we add data
      ofs.open(outputDirectory, std::ios::app);
@@ -197,7 +207,6 @@ OutputResults::OutputResults(std::string graphT, int numVertices, int valNumVehi
          else if(vecAlgs[i] == "Greedy"){
                tempAlgName = "greedy";
                for(double c : costOfGreedy) tempCost += c;
-               tempCost = tempCost;
                for(double p : prizeOfGreedy) tempPrize += p;
                for(double s : sizeOfGreedy) tempSize += s;
                for(double r: runningTimeOfGreedy) tempRunningTime += r;
@@ -205,17 +214,18 @@ OutputResults::OutputResults(std::string graphT, int numVertices, int valNumVehi
          else if(vecAlgs[i] == "GreedyRandom"){
                tempAlgName = "greedyrand";
                for(double c : costOfGreedyRandom) tempCost += c;
-               tempCost = tempCost;
+               tempCost = std::floor(tempCost/5);
                for(double p : prizeOfGreedyRandom) tempPrize += p;
+               tempPrize = std::floor(tempPrize/5);
                for(double s : sizeOfGreedyRandom) tempSize += s;
+               tempSize = std::floor(tempSize/5);
                for(double r: runningTimeOfGreedyRandom) tempRunningTime += r;
+               tempRunningTime = std::ceil(tempRunningTime/5);
          }
          else {
             if(vecAlgs[i] == "SqrBApprox"){
                tempAlgName = "sqrB-approx";
-               tempCost = 0;
                for(double c : costOfSqrBApprox) tempCost += c;
-               tempCost = tempCost;
                for(double p : prizeOfSqrBApprox) tempPrize += p;
                for(double s : sizeOfSqrBApprox) tempSize += s;
                for(double r: runningTimeOfSqrBApprox) tempRunningTime += r;
@@ -354,19 +364,19 @@ void OutputResults::binarySearch(std::vector<std::pair<double, double>> vertices
                  }
                  else
                     if(nameOfAlg == "GreedyRandom") { 
-                    for (int i = 0; i < 20; i++) {
-                       double sizeOfGreedyRandomTemp = 0;
-                       double prizeOfGreedyRandomTemp = 0;
-                       double costOfGreedyRandomTemp = 0;
-                       std::vector<int> verticesOfGreedyRandomTemp;    
-                       computeGreedyRandom(verticesCoordinationsOfAlg, verticesPrizesOfAlg, verticesSizesOfAlg, verticesOfGreedyRandomTemp, costOfGreedyRandomTemp, prizeOfGreedyRandomTemp, sizeOfGreedyRandomTemp);
-                       if(prizeOfAlg < prizeOfGreedyRandomTemp) {
-                           verticesOfAlg = verticesOfGreedyRandomTemp; 
-                           costOfAlg = costOfGreedyRandomTemp; 
-                           prizeOfAlg = prizeOfGreedyRandomTemp; 
-                           sizeOfAlg = sizeOfGreedyRandomTemp;
+                       for (int i = 0; i < 10; i++) {
+                          double sizeOfGreedyRandomTemp = 0;
+                          double prizeOfGreedyRandomTemp = 0;
+                          double costOfGreedyRandomTemp = 0;
+                          std::vector<int> verticesOfGreedyRandomTemp;    
+                          computeGreedyRandom(verticesCoordinationsOfAlg, verticesPrizesOfAlg, verticesSizesOfAlg, verticesOfGreedyRandomTemp, costOfGreedyRandomTemp, prizeOfGreedyRandomTemp, sizeOfGreedyRandomTemp);
+                          if(prizeOfAlg < prizeOfGreedyRandomTemp) {
+                              verticesOfAlg = verticesOfGreedyRandomTemp; 
+                              costOfAlg = costOfGreedyRandomTemp; 
+                              prizeOfAlg = prizeOfGreedyRandomTemp; 
+                              sizeOfAlg = sizeOfGreedyRandomTemp;
+                          }
                        }
-                    }
                  }
            }
      }//End-Of-Binary-For
