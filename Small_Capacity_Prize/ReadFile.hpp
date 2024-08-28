@@ -2,10 +2,7 @@
 //  ReadFile.hpp
 //  
 //
-//  Created by Alice Paul on 4/10/17.
-//
-//  MIT License
-//  Copyright (c) 2020 alicepaul
+//Created by Esmaeil Delfaraz on 01/07/2024.
 //
 #include <stdio.h>
 #include <map>
